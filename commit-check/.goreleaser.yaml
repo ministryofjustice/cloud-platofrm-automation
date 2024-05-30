@@ -8,7 +8,7 @@ before:
 builds:
   - dir: commit-check
     main: main.go
-    binary: commit-check
+    binary: {{ .ProjectName }}
     goos:
       - linux
       - darwin
@@ -30,7 +30,7 @@ dockers:
   dockerfile: '{{ .Env.DOCKERFILE }}'
   use: buildx
   build_flag_templates:
-  - --build-arg=COMMAND={{ .Binary }}
+  - --build-arg=COMMAND={{ .ProjectName }}
   - --platform=linux/amd64
   - --label=org.opencontainers.image.title={{ .ProjectName }}
   - --label=org.opencontainers.image.description={{ .ProjectName }}
