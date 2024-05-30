@@ -8,22 +8,15 @@ import (
 )
 
 var (
-	owner = os.Getenv("GITHUB_REPOSITORY_OWNER")
-	repo  = os.Getenv("GITHUB_REPOSITORY")
-	prnum = os.Getenv("GITHUB_PR_NUMBER")
-	file  = os.Getenv("FILE_NAME")
+	owner    = os.Getenv("GITHUB_REPOSITORY_OWNER")
+	repo     = os.Getenv("GITHUB_REPOSITORY")
+	prnum, _ = strconv.Atoi(os.Getenv("PULL_REQUEST_NUMBER"))
+	file     = os.Getenv("FILE_NAME")
 )
 
 // main function to check if the pull request contains the file with the name specified and no other commited files.
 func main() {
-
-	// convert string to int
-	pr, err := strconv.Atoi(prnum)
-	if err != nil {
-		panic(err)
-	}
-
-	f, _, err := utils.GetPullRequestFiles(owner, repo, pr)
+	f, _, err := utils.GetPullRequestFiles(owner, repo, prnum)
 	if err != nil {
 		panic(err)
 	}
