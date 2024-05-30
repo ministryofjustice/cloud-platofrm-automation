@@ -1,4 +1,4 @@
-project_name: commit-check
+project_name: cloud-platform-commit-check
 env:
   - CGO_ENABLED=0
   - DOCKERFILE=Dockerfile
@@ -34,8 +34,8 @@ dockers:
   - --platform=linux/amd64
   - --label=org.opencontainers.image.title={{ .ProjectName }}
   - --label=org.opencontainers.image.description={{ .ProjectName }}
-  - --label=org.opencontainers.image.url=https://github.com/ministryofjustice/cloud-platofrm-automation/{{ .ProjectName }}
-  - --label=org.opencontainers.image.source=https://github.com/ministryofjustice/cloud-platofrm-automation/{{ .ProjectName }}
+  - --label=org.opencontainers.image.url=https://github.com/ministryofjustice/cloud-platform-automation/{{ .ProjectName }}
+  - --label=org.opencontainers.image.source=https://github.com/ministryofjustice/cloud-platform-automation/{{ .ProjectName }}
   - --label=org.opencontainers.image.version={{ .Version }}
   - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
   - --label=org.opencontainers.image.revision={{ .FullCommit }}
@@ -49,8 +49,8 @@ dockers:
   - --platform=linux/arm64
   - --label=org.opencontainers.image.title={{ .ProjectName }}
   - --label=org.opencontainers.image.description={{ .ProjectName }}
-  - --label=org.opencontainers.image.url=https://github.com/ministryofjustice/cloud-platofrm-automation/{{ .ProjectName }}
-  - --label=org.opencontainers.image.source=https://github.com/ministryofjustice/cloud-platofrm-automation/{{ .ProjectName }}
+  - --label=org.opencontainers.image.url=https://github.com/ministryofjustice/cloud-platform-automation/{{ .ProjectName }}
+  - --label=org.opencontainers.image.source=https://github.com/ministryofjustice/cloud-platform-automation/{{ .ProjectName }}
   - --label=org.opencontainers.image.version={{ .Version }}
   - --label=org.opencontainers.image.created={{ time "2006-01-02T15:04:05Z07:00" }}
   - --label=org.opencontainers.image.revision={{ .FullCommit }}
