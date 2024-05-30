@@ -16,6 +16,9 @@ var (
 
 // main function to check if the pull request contains the file with the name specified and no other commited files.
 func main() {
+
+	fmt.Printf("Onwer: %v, Repo: %v, PR Number: %v, File Name: %v\n", owner, repo, prnum, file)
+
 	f, _, err := utils.GetPullRequestFiles(owner, repo, prnum)
 	if err != nil {
 		panic(err)
