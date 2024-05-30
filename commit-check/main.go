@@ -5,18 +5,29 @@ import (
 	"ministryofjustice/cloud-platform-automation/utils"
 	"os"
 	"strconv"
+	"strings"
+
+	"github.com/sethvargo/go-githubactions"
 )
 
 var (
-	owner    = os.Getenv("GITHUB_REPOSITORY_OWNER")
-	repo     = os.Getenv("GITHUB_REPOSITORY")
-	prnum, _ = strconv.Atoi(os.Getenv("PULL_REQUEST_NUMBER"))
-	file     = os.Getenv("FILE_NAME")
+	ref  = os.Getenv("GITHUB_REF")
+	repo = os.Getenv("GITHUB_REPOSITORY")
+	file = os.Getenv("FILE_NAME")
 )
 
 // main function to check if the pull request contains the file with the name specified and no other commited files.
 func main() {
-	f, _, err := utils.GetPullRequestFiles(owner, repo, prnum)
+
+	githubrefS := strings.Split(ref, "/")
+	prnum := githubrefS[2]
+	pull, _ := strconv.Atoi(prnum)
+
+	repoS := strings.Split(repo, "/")
+	owner := repoS[0]
+	repoName := repoS[1]
+
+	f, _, err := utils.GetPullRequestFiles(owner, repoName, pull)
 	if err != nil {
 		panic(err)
 	}
@@ -24,10 +35,10 @@ func main() {
 	b := utils.Files(file, f)
 	if b {
 		fmt.Printf("pull request commit contains the file with the name %v and no other commited files. This is valid for auto-approval.", file)
-		fmt.Println("::set-output name=approval::true")
+		githubactions.New().SetOutput("approval", "approval_not_needed")
 	}
 	if !b {
 		fmt.Printf("pull request commit does not contain the file with the name %v or contains other commited files. This is not valid for auto-approval.", file)
-		fmt.Println("::set-output name=approval::false")
+		githubactions.New().SetOutput("approval", "approval_needed")
 	}
 }
