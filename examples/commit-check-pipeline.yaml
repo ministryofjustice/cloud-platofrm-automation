@@ -1,32 +1,42 @@
-name: commit-check
+name: skip-file-auto-approve
 
 on:
-  pull request:
+  pull_request:
+    paths:
+      - '**/APPLY_PIPELINE_SKIP_THIS_NAMESPACE'
 
 jobs:
   commit-check:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    env:
+      GITHUB_REF: §{{ github.ref }}
+      GITHUB_REPOSITORY: §{{ github.event.repository.name }}
+      FILE_NAME: "APPLY_PIPELINE_SKIP_THIS_NAMESPACE"
     steps:
-    - uses: actions/checkout@v2
+    - name: checkout
+      uses: actions/checkout@v2
+    
     - id: commit-check
-      name: commit-check
-      uses: docker://minimum2scp/cloud-platform-commit-check:latest
-      env: |
-        - GITHUB_REPOSITORY_OWNER = §{{ github.repository_owner }}
-        - GITHUB_REPOSITORY = §{{ github.repository }}
-        - GITHUB_PR_NUMBER = §{{ github.event.number }}
-        - FILE_NAME = "APPLY_PIPELINE_SKIP_THIS_NAMESPACE"
+      name: commit check
+      uses: docker://ministryofjustice/cloud-platform-commit-check:latest
     
-    - name: check commit result
-      run: echo ${{ steps.commit-check.outputs.approval }}
-    
-    - name: auto-approve success
-      if: ${{ steps.commit-check.outputs.approval == 'true' }}
-      id: auto-approver-pullrequest
+    - name: auto approve
+      if: ${{ steps.commit-check.outputs.approval == 'approval_not_needed' }}
       uses: hmarr/auto-approve-action@v4
       with:
-        github-token: ${{ secrets.pipeline_github_token }}
+        review-message: 'Automatically approving PR for skip file'
       
-    - name: auto-approve failure
-      if: ${{ steps.commit-check.outputs.approval == 'false' }}
-      run: echo "This Pull Request can not be auto-approved."
+    - name: cloud platform approval needed
+      if: ${{ steps.commit-check.outputs.approval == 'approval_needed' }}
+      uses: actions/github-script@v7
+      with:
+        github-token: "${{ secrets.GITHUB_TOKEN }}"
+        script: |
+          github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'This PR requires approval from the Cloud Platform team. Please wait for a member of the team to review.'
+            })
