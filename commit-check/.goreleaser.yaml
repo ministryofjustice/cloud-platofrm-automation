@@ -8,7 +8,7 @@ before:
 builds:
   - dir: commit-check
     main: main.go
-    binary: {{ .ProjectName }}
+    binary: cloud-platform-commit-check
     goos:
       - linux
       - darwin
