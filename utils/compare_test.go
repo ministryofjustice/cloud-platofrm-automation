@@ -55,6 +55,18 @@ func TestFiles(t *testing.T) {
 			},
 			want: false,
 		},
+		{
+			name: "File extension fail",
+			args: args{
+				sfname: "APPLY_PIPELINE_SKIP_THIS_NAMESPACE.tf",
+				files: []*github.CommitFile{
+					{
+						Filename: github.String("APPLY_PIPELINE_SKIP_THIS_NAMESPACE"),
+					},
+				},
+			},
+			want: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
