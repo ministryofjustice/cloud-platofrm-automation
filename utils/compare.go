@@ -14,7 +14,7 @@ func Files(sfname string, files []*github.CommitFile) bool {
 
 	for _, file := range files {
 		if strings.Contains(file.GetFilename(), sfname) {
-			if sfname == file.GetFilename() {
+			if sfname == *file.Filename {
 				skipfile = true
 			}
 		} else {
