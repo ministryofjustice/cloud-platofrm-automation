@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"strings"
+	"regexp"
 
 	"github.com/google/go-github/v61/github"
 )
@@ -11,14 +11,11 @@ var (
 )
 
 func Files(sfname string, files []*github.CommitFile) bool {
-
 	for _, file := range files {
-		if strings.Contains(file.GetFilename(), sfname) {
-			if sfname == *file.Filename {
-				skipfile = true
-			}
+		if sfname, _ := regexp.MatchString(sfname, *file.Filename); sfname {
+			skipfile = true
 		} else {
-			return false
+			skipfile = false
 		}
 	}
 
